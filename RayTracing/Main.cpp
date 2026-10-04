@@ -1,42 +1,30 @@
+#include "color.h"
+#include "vec3.h"
+
 #include <iostream>
-#include <fstream>
-#include <cmath>
-#include <filesystem>
 
 int main() {
+	// image
+	int image_width = 400;
+	int image_height = 300;
 
-	const int width = 400;
-	const int height = 300;
-
-	std::ofstream image("image.ppm");
+	
 
 
-	//PPM header
+	//Render
 
-	image << "P3\n";
-	image << width << " " << height << "\n";
-	image << "255\n";
+	std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
-	for (int y = 0; y < height; y++) {
-		std::clog << "\rScanlines remaining: " << height - y - 1 << ' ' << std::flush;
-		for (int x = 0; x < width; x++) {
-			double r = static_cast<double>(x) / (width - 1);
-			double g = static_cast<double>(y) / (height - 1);
-			double b = 0.2;
-
-			int ir = static_cast<int>(255.999 * r);
-			int ig = static_cast<int>(255.999 * g);
-			int ib = static_cast<int>(255.999 * b);
-
-			image << ir << " " << ig << " " << ib << "\n";
-
+	for (int j = 0; j < image_height; j++) {
+		std::clog << "\rScanlines remaining: " << image_height - j - 1 << ' ' << std::flush;
+		for (int i = 0; i < image_width; i++) {
+			auto pixel_color = color(double(i) / (image_width - 1), double(i) / (image_height - 1), 0);
 		}
 
 	}
 
-	std::clog << "\nDone.\n";
+	std::clog << "\rDone.\n";
 
-	image.close();
 
 	std::cout << "Rendered image.ppm\n";
 
