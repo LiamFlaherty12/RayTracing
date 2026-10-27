@@ -2,6 +2,7 @@
 #include "ray.h"
 #include "vec3.h"
 
+#include <fstream>
 #include <iostream>
 
 color ray_color(const ray& r) {
@@ -26,7 +27,7 @@ int main() {
 
 	auto focal_length = 1.0;
 	auto viewport_height = 2.0;
-	auto viewport_width = viewport_height * (double(image_width) / image_width);
+	auto viewport_width = viewport_height * aspect_ratio;
 	auto camera_center = point3(0, 0, 0);
 
 	// Calculate vectors across the horizontal and down the vertical viewport edges
@@ -48,7 +49,8 @@ int main() {
 
 	//Render
 
-	std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+	std::ofstream out("image.ppm");
+	out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
 
 	for (int j = 0; j < image_height; j++) {
 		std::clog << "\rScanlines remaining: " << image_height - j - 1 << ' ' << std::flush;
@@ -58,7 +60,7 @@ int main() {
 			ray r(camera_center, ray_direction);
 
 			color pixel_color = ray_color(r);
-			write_color(std::cout, pixel_color);
+			write_color(out, pixel_color);
 		}
 
 	}
@@ -66,8 +68,7 @@ int main() {
 	std::clog << "\rDone.\n";
 
 
-	std::cout << "Rendered image.ppm\n";
-
+	out.close();
 	return 0;
 
 }
